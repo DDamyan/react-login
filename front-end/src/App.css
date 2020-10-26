@@ -1,0 +1,32 @@
+table {
+  border-collapse: collapse;
+  font-size: 30px;
+  margin: 0 auto;
+  max-width: 400px;
+  width: 100%;
+}
+
+table tr,
+th,
+td {
+  border: 3px solid grey;
+  text-align: center;
+}
+
+:root {
+  --text-border-color: #00a2ff;
+}
+
+input[type='text'] {
+  border: none;
+  border-bottom: var(--text-border-color) 1px dotted;
+  box-sizing: border-box;
+  outline: none;
+}
+input[type='text']:focus {
+  border-bottom: var(--text-border-color) 1px ridge;
+}
+
+input[type='submit'] {
+  width: 80%;
+}
