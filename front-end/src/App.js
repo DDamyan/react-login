@@ -1,11 +1,11 @@
 import './App.css';
 import React from 'react';
-import {Login} from './components/login/index.jsx';
+import {RegisterLoginForm} from './components/login/index.jsx';
 
 function App() {
   return (
     <div>
-      <Login />
+      <RegisterLoginForm />
     </div>
   );
 }

@@ -4,6 +4,7 @@ table {
   margin: 0 auto;
   max-width: 400px;
   width: 100%;
+  table-layout: fixed;
 }
 
 table tr,
@@ -11,19 +12,38 @@ th,
 td {
   border: 3px solid grey;
   text-align: center;
+  padding: 15px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+.ActiveTab {
+  background-color: #0066ff;
+  color: white;
+}
+
+.MainTableHead {
+  cursor: pointer;
 }
 
 :root {
   --text-border-color: #00a2ff;
 }
 
-input[type='text'] {
+.RegisterForm-input {
   border: none;
   border-bottom: var(--text-border-color) 1px dotted;
   box-sizing: border-box;
   outline: none;
 }
-input[type='text']:focus {
+.RegisterForm-input:focus {
   border-bottom: var(--text-border-color) 1px ridge;
 }
 

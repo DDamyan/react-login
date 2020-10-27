@@ -1,71 +1,90 @@
 import React from 'react';
+import {Login, Register} from './login-register';
+import axios from 'axios';
 
-export class Login extends React.Component {
+const JsonBox = 'https://jsonbox.io/box_8090b4923b5cb01b9d26';
+
+export class RegisterLoginForm extends React.Component {
   constructor(props) {
     super(props);
-
+    this.handleOnTypedIn = this.handleOnTypedIn.bind(this);
     this.state = {
-      Values: {Name: '', Password: ''},
-      ToSubmit: {},
+      ShowRegister: true,
+      Submited: null,
+      TypedIn: null,
     };
   }
+  handleTR_Click = event => {
+    var ele = event.target;
 
-  handleSubmit_Login = event => {
-    event.preventDefault();
-
-    if (this.state.Values.Name && this.state.Values.Password) {
-      this.setState(currState => ({
-        ToSubmit: {Name: currState.Values.Name, Password: currState.Values.Password},
-      }));
-      //window.location.replace('/');
-    } else {
-      alert('Fields are required');
+    if (ele.innerText.toLowerCase().includes('login')) {
+      this.setState({
+        ShowRegister: false,
+      });
+    } else if (ele.innerText.toLowerCase().includes('register')) {
+      this.setState({
+        ShowRegister: true,
+      });
     }
   };
 
-  handleChange = event => {
-    this.setState(currState => ({
-      Values: {...currState.Values, [event.target.placeholder]: event.target.value},
-    }));
+  handleSubmit = data => {
+    this.setState({
+      Submited: data,
+    });
   };
+
+  handleOnTypedIn = data => {
+    this.setState({
+      TypedIn: data,
+    });
+  };
+
+  fetchData = async () => {
+    const {data, status} = await axios.get(JsonBox);
+    if (status === 200) {
+      console.log(data);
+    }
+  };
+
+  componentDidMount() {
+    this.fetchData();
+  }
 
   render() {
     return (
       <div>
         <table>
           <thead>
-            <tr>
-              <th>Login</th>
-              <th>Register</th>
+            <tr className={'MainTableHead noselect'} onClick={e => this.handleTR_Click(e)}>
+              <th className={this.state.ShowRegister ? '' : 'ActiveTab'}>Login</th>
+              <th className={this.state.ShowRegister ? 'ActiveTab' : ''}>Register</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td colSpan='2'>
-                <form onSubmit={e => this.handleSubmit_Login(e)}>
-                  <div>
-                    <input
-                      value={this.state.Values.Name}
-                      onChange={e => this.handleChange(e)}
-                      type='text'
-                      placeholder='Name'
-                    />
-                  </div>
-                  <div>
-                    <input
-                      onChange={e => this.handleChange(e)}
-                      value={this.state.Values.Password}
-                      type='text'
-                      placeholder='Password'
-                    />
-                  </div>
-                  <input type='submit' value='Login' />
-                </form>
+                {this.state.ShowRegister ? (
+                  <Register
+                    PassName={this.state.TypedIn ? this.state.TypedIn.Name : ''}
+                    OnTypedIn={this.handleOnTypedIn}
+                    OnSubmit={this.handleSubmit}
+                  />
+                ) : (
+                  <Login
+                    PassName={this.state.TypedIn ? this.state.TypedIn.Name : ''}
+                    OnTypedIn={this.handleOnTypedIn}
+                    OnSubmit={this.handleSubmit}
+                  />
+                )}
               </td>
             </tr>
           </tbody>
         </table>
-        <pre>{JSON.stringify(this.state.ToSubmit, null, 2)}</pre>
+        <h2>Typed in:</h2>
+        <pre>{JSON.stringify(this.state.TypedIn, null, 2)}</pre>
+        <h2>Submitted:</h2>
+        <pre>{JSON.stringify(this.state.Submited, null, 2)}</pre>
       </div>
     );
   }
