@@ -1,5 +1,14 @@
 import React from 'react';
 
+const checkIfEmptyObject = obj => {
+  for (var key in obj) {
+    if (obj[key] === '' || obj[key] === null) {
+      return false;
+    }
+  }
+  return true;
+};
+
 //############### REGISTER ###############
 export class Register extends React.Component {
   constructor(props) {
@@ -60,7 +69,11 @@ export class Register extends React.Component {
               placeholder='Password'
             />
           </div>
-          <input type='submit' value='Register' />
+          <input
+            className={checkIfEmptyObject(this.state.Values) ? 'Ready' : null}
+            type='submit'
+            value='Register'
+          />
         </form>
       </div>
     );
@@ -130,7 +143,11 @@ export class Login extends React.Component {
               placeholder='Password'
             />
           </div>
-          <input type='submit' value='Login' />
+          <input
+            className={checkIfEmptyObject(this.state.Values) ? 'Ready' : null}
+            type='submit'
+            value='Login'
+          />
         </form>
       </div>
     );

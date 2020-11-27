@@ -2,7 +2,7 @@ import React from 'react';
 import {Login, Register} from './login-register';
 import axios from 'axios';
 
-const JsonBox = 'https://jsonbox.io/box_8090b4923b5cb01b9d26';
+const JsonBox = 'https://jsonbox.io/box_8090b4923b5cb01b9d26'; //<- To env-var
 
 export class RegisterLoginForm extends React.Component {
   constructor(props) {
@@ -12,6 +12,7 @@ export class RegisterLoginForm extends React.Component {
       ShowRegister: true,
       Submited: null,
       TypedIn: null,
+      Message: '',
     };
   }
   handleTR_Click = event => {
@@ -29,9 +30,14 @@ export class RegisterLoginForm extends React.Component {
   };
 
   handleSubmit = data => {
-    this.setState({
-      Submited: data,
-    });
+    this.setState(
+      {
+        Submited: data,
+      },
+      () => {
+        this.fetchData();
+      },
+    );
   };
 
   handleOnTypedIn = data => {
@@ -41,15 +47,31 @@ export class RegisterLoginForm extends React.Component {
   };
 
   fetchData = async () => {
-    const {data, status} = await axios.get(JsonBox);
-    if (status === 200) {
-      console.log(data);
+    const UserNameBox = JsonBox + '/' + this.state.Submited.Name;
+    var MessageToShow = '';
+    if (this.state.ShowRegister) {
+      await axios.post(UserNameBox, {...this.state.Submited});
+      MessageToShow = 'You can now login';
+      this.setState({
+        ShowRegister: false,
+      });
+    } else {
+      const Filter = '?q=Password:' + this.state.Submited.Password;
+      const {data, status} = await axios.get(UserNameBox + Filter);
+      MessageToShow = 'ERROR with connection';
+      if (status === 200) {
+        if (data.length > 0) {
+          MessageToShow = 'Welcome, ' + data[0].Name + '!';
+        } else {
+          MessageToShow = 'User not found';
+        }
+      }
     }
-  };
 
-  componentDidMount() {
-    this.fetchData();
-  }
+    this.setState({
+      Message: MessageToShow,
+    });
+  };
 
   render() {
     return (
@@ -57,13 +79,14 @@ export class RegisterLoginForm extends React.Component {
         <table>
           <thead>
             <tr className={'MainTableHead noselect'} onClick={e => this.handleTR_Click(e)}>
-              <th className={this.state.ShowRegister ? '' : 'ActiveTab'}>Login</th>
-              <th className={this.state.ShowRegister ? 'ActiveTab' : ''}>Register</th>
+              <th className={this.state.ShowRegister ? 'ActiveTab' : null}>Login</th>
+              <th className='SpacingTH'></th>
+              <th className={this.state.ShowRegister ? null : 'ActiveTab'}>Register</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colSpan='2'>
+              <td colSpan='3'>
                 {this.state.ShowRegister ? (
                   <Register
                     PassName={this.state.TypedIn ? this.state.TypedIn.Name : ''}
@@ -81,10 +104,11 @@ export class RegisterLoginForm extends React.Component {
             </tr>
           </tbody>
         </table>
-        <h2>Typed in:</h2>
+        <h1 className='UserInfo'>{this.state.Message}</h1>
+        {/* <h2>Typed in:</h2>
         <pre>{JSON.stringify(this.state.TypedIn, null, 2)}</pre>
         <h2>Submitted:</h2>
-        <pre>{JSON.stringify(this.state.Submited, null, 2)}</pre>
+        <pre>{JSON.stringify(this.state.Submited, null, 2)}</pre> */}
       </div>
     );
   }

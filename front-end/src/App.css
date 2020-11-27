@@ -1,18 +1,25 @@
+:root {
+  --text-border-color: #00a2ff;
+  --table-border-style: 2px solid rgb(173, 173, 173);
+  --unselectedTap: #b9e9ff;
+}
+
 table {
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
   font-size: 30px;
   margin: 0 auto;
   max-width: 400px;
   width: 100%;
   table-layout: fixed;
+  border-spacing: 0px;
 }
 
-table tr,
-th,
-td {
-  border: 3px solid grey;
+table > tbody tr td {
+  border: var(--table-border-style);
+  border-top: none;
   text-align: center;
   padding: 15px;
+  border-radius: 0px 0px 13px 13px;
 }
 
 .noselect {
@@ -24,17 +31,30 @@ td {
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
-.ActiveTab {
-  background-color: #0066ff;
-  color: white;
+.UserInfo {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+}
+
+.MainTableHead th.ActiveTab {
+  border: var(--table-border-style);
+  background-color: var(--unselectedTap);
+}
+.MainTableHead th.SpacingTH {
+  border: none;
+  border-bottom: var(--table-border-style);
+  width: 1px;
+}
+
+.MainTableHead th {
+  border: var(--table-border-style);
+  border-bottom: none;
+  border-radius: 13px 13px 0px 0px;
 }
 
 .MainTableHead {
   cursor: pointer;
-}
-
-:root {
-  --text-border-color: #00a2ff;
 }
 
 .RegisterForm-input {
@@ -49,4 +69,20 @@ td {
 
 input[type='submit'] {
   width: 80%;
+  border: none;
+  background: rgb(209, 209, 209);
+  transition: background-color 0.2s ease-in-out;
+  cursor: default;
+  border-radius: 30px;
+}
+input[type='submit']:focus {
+  border: none;
+  outline: none;
+}
+input[type='submit'].Ready {
+  background: rgb(135, 207, 255);
+  cursor: pointer;
+}
+input[type='submit'].Ready:hover {
+  background: rgb(89, 188, 255);
 }
